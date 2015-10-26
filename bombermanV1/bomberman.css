@@ -1,0 +1,112 @@
+<style>
+	*{
+	margin: 0px;
+	}
+	#gameboard{
+		display: inline-block;
+		
+		height: 225px;
+		width: 260px;
+	}
+	p{
+		text-align: center;
+	}
+	#optionSelect{
+		height: 200px;
+		width: 150px;
+		font-size: 8px;
+		
+		display: inline-block;
+		color:white;
+		vertical-align: top;
+	}
+	.map1{
+		border: 1px solid white;
+		height: 70px;
+		width: 70px;
+		display: inline-block;
+	}
+	.map2{
+		border: 1px solid white;
+		height: 70px;
+		width: 70px;
+		display: inline-block;
+	}
+	body{
+		margin:0px;
+		background-color:black;
+	}
+
+	.rainbow {
+  		background-image: -webkit-gradient( linear, left top, right top, color-stop(0, #f22), color-stop(0.15, #f2f), color-stop(0.3, #22f), color-stop(0.45, #2ff), color-stop(0.6, #2f2),color-stop(0.75, #2f2), color-stop(0.9, #ff2), color-stop(1, #f22) );
+  		background-image: gradient( linear, left top, right top, color-stop(0, #f22), color-stop(0.15, #f2f), color-stop(0.3, #22f), color-stop(0.45, #2ff), color-stop(0.6, #2f2),color-stop(0.75, #2f2), color-stop(0.9, #ff2), color-stop(1, #f22) );
+  		color:transparent;
+  		-webkit-background-clip: text;
+  		background-clip: text;
+	}
+	#reset {
+		position: absolute; 
+		top: 80%;
+		left: 80%;
+
+	}
+
+	#world div.row div{
+		width:16px;
+		height:16px;
+		display:inline-block;
+		margin:0px;
+	}
+	.block {
+		background: url('sprite.png');
+		background-position: -71px -174px;
+	}
+	.ground {
+		background: url('sprite.png');
+		background-position: -122px -175px;	
+	}
+	.brick {
+		background: url('sprite.png');
+		background-position: -87px -175px;	
+	}
+	.bomb {
+		background: url('sprite.png');
+		background-position: -18px -257px;		
+	}
+	.explosion {
+		background: url('sprite.png');
+		background-position: -185px -290px;		
+	}
+	.explosionRow{
+		background: url('sprite.png');
+		background-position: -172px -290px;
+	}
+	.explosionColumn{
+		background: url('sprite.png');
+		background-position:-185px -277px;
+	}
+	#bomber {
+		position:absolute;
+		background: url('sprite.png');
+		background-position: -2px -39px;
+		width:16px;
+		height:16px;		
+	}
+	#bomber2 {
+		position:absolute;
+		background: url('sprite.png');
+		background-position: -2px -67px;
+		width:16px;
+		height:16px;		
+	}
+	#Menu{
+		display: inline-block;
+		background-color: blue;
+		width: 80px;
+		height: 80px;
+		left:240px;
+		top:0px;
+		position: absolute;
+	}
+
+</style>

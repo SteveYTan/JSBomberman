@@ -1,0 +1,291 @@
+<html>
+<head>
+	<meta charset = UTF-8>
+      <title> Bomberman</title>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+      <link rel="stylesheet" type="text/css" href="bomberman.css">
+
+
+
+</head>
+
+<body>
+	<div id = "gameboard">
+	<div id='world'>
+	</div>
+	 <div id='bomber'></div>
+	 <div id='bomber2'></div>
+	 </div>
+	 <div id = 'optionSelect'> 
+	 	<p class = "rainbow" >Map Selection</p>
+	 	<img class = "map1" src="map1.png" alt = "image.png">
+	 	<img class = "map2" src="map2.png" alt = "image.png">
+	 <button id = 'reset'>Reset</button>
+
+	 </div>
+
+	<script>
+
+	var bomber = {
+		x: 1,
+		y: 1,
+		bombCount: 5
+	}
+	var bombertwo = {
+		x: 13,
+		y: 11,
+		bombCount: 5
+	}
+
+	var bombs = [];
+	var restockBombs = 0;
+
+	var world = []; // original world
+
+
+	var world1 = [ //default world
+		[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+		[1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+		[1,0,1,0,1,0,1,0,1,0,1,0,1,0,1],
+		[1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+		[1,0,1,0,1,0,1,0,1,0,1,0,1,0,1],
+		[1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+		[1,0,1,0,1,0,1,0,1,0,1,0,1,0,1],
+		[1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+		[1,0,1,0,1,0,1,0,1,0,1,0,1,0,1],
+		[1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+		[1,0,1,0,1,0,1,0,1,0,1,0,1,0,1],
+		[1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+		[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+	]
+
+	var world2 = [ //clear world *Optional*
+		[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+		[1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+		[1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+		[1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+		[1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+		[1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+		[1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+		[1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+		[1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+		[1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+		[1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+		[1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+		[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+	]
+
+	document.onkeydown = function(e) {
+		console.log(e.keyCode);
+		if(e.keyCode == 37 && world[bomber.y][bomber.x-1] == 0) {
+			bomber.x--;
+		} else if(e.keyCode == 39 && world[bomber.y][bomber.x+1] == 0) {
+			bomber.x++;
+		} else if(e.keyCode == 38 && world[bomber.y-1][bomber.x] == 0) {
+			bomber.y--;
+		} else if(e.keyCode == 40 && world[bomber.y+1][bomber.x] == 0) {
+			bomber.y++;
+		} else if(e.keyCode == 13 && bomber.bombCount > 0) {
+			bomber.bombCount -= 1;
+			bombs.push({x: bomber.x, y: bomber.y, fuse: 1100,});
+		}
+		  else if(e.keyCode == 65 && world[bombertwo.y][bombertwo.x-1] == 0) {
+			bombertwo.x--;
+		} else if(e.keyCode == 68 && world[bombertwo.y][bombertwo.x+1] == 0) {
+			bombertwo.x++;
+		} else if(e.keyCode == 87 && world[bombertwo.y-1][bombertwo.x] == 0) {
+			bombertwo.y--;
+		} else if(e.keyCode == 83 && world[bombertwo.y+1][bombertwo.x] == 0) {
+			bombertwo.y++;
+		} else if(e.keyCode == 32 && bombertwo.bombCount > 0) {
+			bombs.push({x: bombertwo.x, y: bombertwo.y, fuse: 1100,});
+		}
+	}
+	function drawBombs(){
+		for(var i=0; i<bombs.length; i++){
+			world[bombs[i].y][bombs[i].x] = 3;
+			bombs[i].fuse -= 50;
+			if(bombs[i].fuse < 0 && (bombs[i].fuse >= -400)){
+				world[bombs[i].y][bombs[i].x] = 4;
+				 explode(bombs[i]);
+				
+			}
+			 if(bombs[i].fuse < -300)
+			 {		
+					clean(bombs[i]);		
+			 }
+
+		}
+	}
+	function drawBomber(){
+		document.getElementById('bomber').style.top = bomber.y*16+"px";
+		document.getElementById('bomber').style.left = bomber.x*16+"px";
+	}
+	function drawBomber2(){
+		document.getElementById('bomber2').style.top = bombertwo.y*16+"px";
+		document.getElementById('bomber2').style.left = bombertwo.x*16+"px";
+	}
+	function newBombs(){ //max bombs is 5 restocks 1 per second.
+		restockBombs += 1;
+		if (restockBombs == 10)
+		{
+			if (bomber.bombCount < 5)
+			{bomber.bombCount += 1;}
+			if (bombertwo.bombCount < 5)
+			{bombertwo.bombCount +=1;}
+			restockBombs = 0;
+		}
+
+	}
+	$(document).ready(function(){
+		$('.map1').click(function(){
+			world = world1;
+		});
+		$('.map2').click(function(){
+			world = world2;
+		});
+		$('#reset').click(function(){
+			bomber.x = 1;
+			bomber.y = 1;
+			bombertwo.x = 13;
+			bombertwo.y = 11;
+
+
+
+		});
+
+
+
+	});
+
+
+
+
+
+
+	function explode(bomb){
+		//bomb right
+		for( var u = 1; u< 15; u++)
+	 	{	
+	 			if (world[bomb.y][bomb.x + u] == 0)
+				{world[bomb.y][bomb.x + u] = 6;}
+	 			if (world[bomb.y][bomb.x + u] == 1)
+				{break;}
+		}
+		//bomb left
+		for ( var j = 1; j< 15; j++) 
+	 	{
+	 		if (world[bomb.y][bomb.x - j] == 0)
+			{world[bomb.y][bomb.x - j] = 6;}
+	 		if (world[bomb.y][bomb.x - j] == 1)
+			{break;}
+		}
+		//bomb down
+		for ( var u = 1; u< 20; u++)
+	 	{
+	 		if (world[bomb.y + u][bomb.x] == 0)
+			{world[bomb.y + u][bomb.x ] = 5;}
+	 		if (world[bomb.y + u][bomb.x] == 1)
+			{break;}
+		}
+		//bomb up
+		for ( var j = 1; j< 20; j++)
+	 	{
+	 		if (world[bomb.y - j][bomb.x] == 0)
+			{world[bomb.y - j][bomb.x] = 5;}
+	 		if (world[bomb.y - j][bomb.x] == 1)
+			{ 
+			break;}
+		}
+	}
+	function clean(bomb){
+		world[bomb.y][bomb.x] = 0;
+		//clean right
+	 	for ( var j = 1; j< 20; j++)
+ 		{	
+ 			if (world[bomb.y][bomb.x + j] >= 4)
+				{world[bomb.y][bomb.x + j] = 0;}
+			if (world[bomb.y][bomb.x + j] == 1)
+				{break;}
+		}
+		//clean left
+	 	for ( var j = 1; j< 20; j++)
+	 		{	
+	 			if (world[bomb.y][bomb.x - j] >= 4)
+					{world[bomb.y][bomb.x - j] = 0;}
+				if (world[bomb.y][bomb.x - j] == 1)
+					{break;}
+		}
+		//clean down
+		for ( var j = 1; j< 20; j++)
+	 		{	
+	 			if (world[bomb.y + j][bomb.x] >= 4)
+					{world[bomb.y + j][bomb.x] = 0;}
+				if (world[bomb.y + j][bomb.x] == 1)
+					{break;}
+			}
+		//clean up
+		for ( var j = 1; j< 20; j++)
+	 		{	
+	 			if (world[bomb.y - j][bomb.x] >= 4)
+					{world[bomb.y - j][bomb.x] = 0;}
+				if (world[bomb.y - j][bomb.x] == 1)
+					{break;}
+			}
+	}
+	function checkWin(){
+		if (world[bomber.y][bomber.x] >= 4)
+		{
+			bomber.x = 15;
+		}
+		if (world[bombertwo.y][bombertwo.x] >= 4)
+		{
+			bombertwo.y = 13;
+		}
+
+	}
+	function drawWorld(){
+		var output = '';
+
+		for(var i=0; i<world.length; i++)
+		{
+			output += "<div class='row'>";
+			for(var j=0; j<world[i].length; j++)
+			{
+				if(world[i][j] == 0){
+					output += "<div class='ground'></div>";
+				} else if(world[i][j] == 1){
+					output += "<div class='block'></div>";
+				} else if(world[i][j] == 2){
+					output += "<div class='brick'></div>";
+				} else if(world[i][j] == 3){
+					output += "<div class='bomb'></div>";
+				} else if(world[i][j] == 4){
+					output += "<div class='explosion'></div>";
+				} else if(world[i][j] == 5){
+					output += "<div class='explosionColumn'></div>";
+				} else if(world[i][j] == 6){
+					output += "<div class='explosionRow'></div>";
+				}
+			}
+			output += "</div>";
+		}
+		document.getElementById('world').innerHTML = output;
+	}
+
+	function gameLoop(){
+		drawWorld();
+		newBombs();
+		drawBomber();
+		drawBomber2();
+		drawBombs();
+		checkWin();
+	}
+
+	world = world2;
+	setInterval(gameLoop, 100)
+	</script>
+
+</body>
+
+</html>
